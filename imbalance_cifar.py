@@ -3,7 +3,7 @@ import torchvision
 import torchvision.transforms as transforms
 import numpy as np
 
-class IMBALANCECIFAR10(torchvision.datasets.CIFAR10):
+class IMBALANCECIFAR10(torchvision.datasets.MNIST):
     cls_num = 10
 
     def __init__(self, root, imb_type='exp', imb_factor=0.01, rand_number=0, train=True,
