@@ -102,10 +102,10 @@ def addSymmetricNoise(data, noise_ratio):
 
 
 # Load from zip file -- Imbalanced data
-training_images_unzipped = gzip.open('./train-images-idx3-ubyte.gz', 'r')
-training_labels_unzipped = gzip.open('./train-labels-idx1-ubyte.gz', 'r')
-test_images_unzipped = gzip.open('./t10k-images-idx3-ubyte.gz', 'r')
-test_labels_unzipped = gzip.open('./t10k-labels-idx1-ubyte.gz', 'r')
+training_images_unzipped = gzip.open('train-images-idx3-ubyte.gz', 'r')
+training_labels_unzipped = gzip.open('train-labels-idx1-ubyte.gz', 'r')
+test_images_unzipped = gzip.open('t10k-images-idx3-ubyte.gz', 'r')
+test_labels_unzipped = gzip.open('t10k-labels-idx1-ubyte.gz', 'r')
 
 image_size = 28
 training_labels_unzipped.read(8)
