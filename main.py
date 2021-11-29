@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import gzip
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,8 +10,6 @@ from sklearn.linear_model import LogisticRegression
 from util import other_class
 
 # includes for SL
-from __future__ import absolute_import
-from __future__ import print_function
 
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
