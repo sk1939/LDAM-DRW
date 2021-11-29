@@ -18,7 +18,7 @@ from tensorflow.keras.optimizers import SGD
 from keras.callbacks import ModelCheckpoint
 import tensorflow as tf
 from util import get_lr_scheduler
-from models import get_model
+from model import get_model
 from loss import symmetric_cross_entropy
 from callback_util import LoggerCallback, SGDLearningRateTracker
 
