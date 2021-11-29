@@ -160,13 +160,15 @@ imbalanced_data = imbalanced_data.reshape(-1, image_size * image_size)
 balanced_data = balanced_data.reshape(-1, image_size * image_size)
 test_images = test_images.reshape(-1, image_size * image_size)
 
-labelArray = np_utils.to_categorical(labelArray, 10)
-label_array_imbalanced_asym = np_utils.to_categorical(label_array_imbalanced_asym, 10)
-label_array_balanced_asym = np_utils.to_categorical(label_array_balanced_asym, 10)
-label_array_imbalanced_sym = np_utils.to_categorical(label_array_imbalanced_sym, 10)
-label_array_balanced_sym = np_utils.to_categorical(label_array_balanced_sym, 10)
 
-test_labelArray = np_utils.to_categorical(test_labelArray, 10)
+
+# labelArray = np_utils.to_categorical(labelArray, 10)
+# label_array_imbalanced_asym = np_utils.to_categorical(label_array_imbalanced_asym, 10)
+# label_array_balanced_asym = np_utils.to_categorical(label_array_balanced_asym, 10)
+# label_array_imbalanced_sym = np_utils.to_categorical(label_array_imbalanced_sym, 10)
+# label_array_balanced_sym = np_utils.to_categorical(label_array_balanced_sym, 10)
+#
+# test_labelArray = np_utils.to_categorical(test_labelArray, 10)
 
 
 def get_data():
@@ -210,7 +212,6 @@ def predictWithLogisticRegression(data, label, dataset_type):
     prediction = oLogisticRegression.predict(test_images)
     printStatistics(test_labelArray, prediction, dataset_type, oLogisticRegression, test_images)
 
-
 ##################SVM######################################
 # predictWithSVM(imbalanced_data, labelArray, "Imbalanced without noise")
 # predictWithSVM(balanced_data, training_labels_balanced_without_noise, "Balanced without noise")
@@ -231,79 +232,79 @@ def predictWithLogisticRegression(data, label, dataset_type):
 
 # predictWithLogisticRegression(balanced_data, label_array_balanced_asym, "Balanced with asymmetric noise")
 # predictWithLogisticRegression(balanced_data, label_array_balanced_sym, "Balanced with symmetric noise")
-
-
-def train(dataset, model_name='sl', batch_size=128, epochs=50, noise_ratio=0, asym=False, alpha=1.0, beta=1.0):
-    """
-    Train one model with data augmentation: random padding+cropping and horizontal flip
-    :param dataset:
-    :param model_name:
-    :param batch_size:
-    :param epochs:
-    :param noise_ratio:
-    :return:
-    """
-    print('Dataset: %s, model: %s, batch: %s, epochs: %s, noise ratio: %s%%, asymmetric: %s, alpha: %s, beta: %s' %
-          (dataset, model_name, batch_size, epochs, noise_ratio, asym, alpha, beta))
-
-    # load data
-    X_train, y_train, y_train_clean, X_test, y_test = get_data()
-    print(y_train.shape)
-    n_images = X_train.shape[0]
-    image_shape = X_train.shape[1:]
-    num_classes = y_train.shape[1]
-    print("n_images", n_images, "num_classes", num_classes, "image_shape:", image_shape)
-
-    # define P for forward and backward loss
-    P = np.eye(num_classes)
-
-    # load model
-    model = get_model(dataset, input_tensor=None, input_shape=image_shape, num_classes=num_classes)
-    # model.summary()
-
-    optimizer = SGD(lr=0.1, decay=1e-4, momentum=0.9)
-
-    loss = symmetric_cross_entropy(alpha, beta)
-
-    # model
-    model.compile(
-        loss=loss,
-        optimizer=optimizer,
-        metrics=['accuracy', 'Recall', 'Precision', 'f1_score']
-    )
-
-    ## do real-time updates using callbakcs
-    callbacks = []
-
-    # learning rate scheduler if use sgd
-    lr_scheduler = get_lr_scheduler(dataset)
-    callbacks.append(lr_scheduler)
-
-    callbacks.append(SGDLearningRateTracker(model))
-
-    # acc, loss, lid
-    log_callback = LoggerCallback(model, X_train, y_train, y_train_clean, X_test, y_test, dataset, model_name,
-                                  noise_ratio, asym, epochs, alpha, beta)
-    callbacks.append(log_callback)
-
-    # data augmentation
-    datagen = ImageDataGenerator()
-    datagen.fit(X_train)
-
-    # train model
-    model.fit_generator(datagen.flow(X_train, y_train, batch_size=batch_size),
-                        steps_per_epoch=len(X_train) / batch_size, epochs=epochs,
-                        validation_data=(X_test, y_test),
-                        verbose=1,
-                        callbacks=callbacks
-                        )
-
-
-imbalanced_data = imbalanced_data.reshape(-1, image_size, image_size, 1)
-balanced_data = balanced_data.reshape(-1, image_size, image_size, 1)
-test_images = test_images.reshape(-1, image_size, image_size, 1)
-
-train('mnist', 'sl', 128, 10, 40, False, 0.01, 1.0)
+#
+#
+# def train(dataset, model_name='sl', batch_size=128, epochs=50, noise_ratio=0, asym=False, alpha=1.0, beta=1.0):
+#     """
+#     Train one model with data augmentation: random padding+cropping and horizontal flip
+#     :param dataset:
+#     :param model_name:
+#     :param batch_size:
+#     :param epochs:
+#     :param noise_ratio:
+#     :return:
+#     """
+#     print('Dataset: %s, model: %s, batch: %s, epochs: %s, noise ratio: %s%%, asymmetric: %s, alpha: %s, beta: %s' %
+#           (dataset, model_name, batch_size, epochs, noise_ratio, asym, alpha, beta))
+#
+#     # load data
+#     X_train, y_train, y_train_clean, X_test, y_test = get_data()
+#     print(y_train.shape)
+#     n_images = X_train.shape[0]
+#     image_shape = X_train.shape[1:]
+#     num_classes = y_train.shape[1]
+#     print("n_images", n_images, "num_classes", num_classes, "image_shape:", image_shape)
+#
+#     # define P for forward and backward loss
+#     P = np.eye(num_classes)
+#
+#     # load model
+#     model = get_model(dataset, input_tensor=None, input_shape=image_shape, num_classes=num_classes)
+#     # model.summary()
+#
+#     optimizer = SGD(lr=0.1, decay=1e-4, momentum=0.9)
+#
+#     loss = symmetric_cross_entropy(alpha, beta)
+#
+#     # model
+#     model.compile(
+#         loss=loss,
+#         optimizer=optimizer,
+#         metrics=['accuracy', 'Recall', 'Precision', 'f1_score']
+#     )
+#
+#     ## do real-time updates using callbakcs
+#     callbacks = []
+#
+#     # learning rate scheduler if use sgd
+#     lr_scheduler = get_lr_scheduler(dataset)
+#     callbacks.append(lr_scheduler)
+#
+#     callbacks.append(SGDLearningRateTracker(model))
+#
+#     # acc, loss, lid
+#     log_callback = LoggerCallback(model, X_train, y_train, y_train_clean, X_test, y_test, dataset, model_name,
+#                                   noise_ratio, asym, epochs, alpha, beta)
+#     callbacks.append(log_callback)
+#
+#     # data augmentation
+#     datagen = ImageDataGenerator()
+#     datagen.fit(X_train)
+#
+#     # train model
+#     model.fit_generator(datagen.flow(X_train, y_train, batch_size=batch_size),
+#                         steps_per_epoch=len(X_train) / batch_size, epochs=epochs,
+#                         validation_data=(X_test, y_test),
+#                         verbose=1,
+#                         callbacks=callbacks
+#                         )
+#
+#
+# imbalanced_data = imbalanced_data.reshape(-1, image_size, image_size, 1)
+# balanced_data = balanced_data.reshape(-1, image_size, image_size, 1)
+# test_images = test_images.reshape(-1, image_size, image_size, 1)
+#
+# train('mnist', 'sl', 128, 10, 40, False, 0.01, 1.0)
 
 
 
