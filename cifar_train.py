@@ -102,7 +102,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     # create model
     print("=> creating model '{}'".format(args.arch))
-    num_classes = 100 
+    num_classes = 100
     use_norm = True if args.loss_type == 'LDAM' else False
     model = models.__dict__[args.arch](num_classes=num_classes, use_norm=use_norm)
 
